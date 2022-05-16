@@ -257,6 +257,50 @@ Monitor the changes:
 kubectl get cm
 ```
 
+### Render a ConfigMap value dynamically with conditionals
+
+Helm allows us to add conditionals to our charts, to dynamically change the values in our charts. The syntax contains the 3 keywords: `{{if}}`, `{{else}}`, `{{end}}`.
+
+To add a conditional in our ConfigMap we can have in `templates/configmap.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: first-chart-configmap-{{.Chart.Version}}
+data:
+  port: "8080"
+  {{if eq .Values.env "staging"}}
+  allowTesting: "true"
+  {{else}}
+  allowTesting: "false"
+  {{end}}
+```
+
+In the `values.yaml` file we can add the `env` value to specify the either a `staging` or a `production` environment:
+
+```yaml
+env: staging
+# ...
+```
+
+#### Update the Helm chart
+
+If we make changes to the `first-chart`, we can update our cluster with:
+
+```bash
+# First check the chart files for the change
+helm template first-chart .
+# Apply the change to the cluster
+helm upgrade first-chart .
+```
+
+Monitor the changes:
+
+```bash
+kubectl get cm
+```
+
 ### Uninstall a helm chart
 
 To uninstall the `first-chart`:
