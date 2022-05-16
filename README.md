@@ -134,6 +134,32 @@ kubectl get cm
 kubectl describe cm first-chart-configmap
 ```
 
+### Update a Helm chart
+
+If we make changes to the `first-chart`, we can update our cluster with:
+
+```bash
+# First check the chart files for the change
+helm template first-chart .
+# Apply the change to the cluster
+helm upgrade first-chart .
+```
+
+Monitor the changes:
+
+```bash
+kubectl get cm
+kubectl describe cm first-chart-configmap
+```
+
+### Uninstall a helm chart
+
+To uninstall the `first-chart`:
+
+```bash
+helm uninstall first-chart
+```
+
 ## Links
 
 - [LinkedIn Learning - Kubernetes: Package Management with Helm](https://www.linkedin.com/learning/kubernetes-package-management-with-helm/)
