@@ -185,6 +185,33 @@ kubectl get secrets
 kubectl describe secrets first-secret
 ```
 
+### Rollback a Helm Release
+
+View revision history of the `first-chart` chart:
+
+```bash
+helm history first-chart
+```
+
+To rollback to the previous (most recent) version, run:
+
+```bash
+helm rollback first-chart
+```
+
+To verify the change:
+
+```bash
+helm history first-chart
+```
+
+To rollback to a specific revision (e.g. Revision 2), run:
+
+```bash
+# Last argument is the revision number displayed, on the helm history command
+helm rollback first-chart 2
+```
+
 ### Uninstall a helm chart
 
 To uninstall the `first-chart`:
