@@ -44,7 +44,7 @@ helm completion zsh > "${fpath[1]}/_helm"
 
 > See [Links](#links) bellow for official helm completion guide on all supported shells.
 
-## Install a Helm chart in Kubernetes cluster
+## Install a Helm chart from a repository
 
 Install the `bitnami/kube-state-metrics` chart in our local Kubernetes cluster:
 
@@ -70,7 +70,7 @@ kubectl logs -n metrics kube-state-metrics-6dc949474-gbknx
 kubectl port-forward -n metrics svc/kube-state-metrics --address 0.0.0.0 8090:8080
 ```
 
-## The Helm Show command
+### The Helm Show command
 
 Inspect a helm chart from a repo:
 
@@ -85,7 +85,7 @@ Inspect the values of the helm chart:
 helm show values bitnami/kube-state-metrics > values.yaml
 ```
 
-## Update a Helm chart
+### Update a Helm chart
 
 Upgrade the chart version:
 
@@ -110,7 +110,7 @@ helm create first-chart
 
 A boilerplate ConfigMap in `templates/configmap.yaml`:
 
-```yml
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -119,7 +119,7 @@ data:
   port: "8080"
 ```
 
-### Install a Helm chart
+#### Install a Helm chart
 
 In the `first-chart` directory run:
 
@@ -134,7 +134,7 @@ kubectl get cm
 kubectl describe cm first-chart-configmap
 ```
 
-### Update a Helm chart
+#### Update a Helm chart
 
 If we make changes to the `first-chart`, we can update our cluster with:
 
@@ -150,6 +150,39 @@ Monitor the changes:
 ```bash
 kubectl get cm
 kubectl describe cm first-chart-configmap
+```
+
+### Create a Secret
+
+A boilerplate Secret in `templates/secret.yaml`:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: first-secret
+type: Opaque
+data:
+  username: YWRtaW4=
+  password: NHc1NzIkOXNuczEmIQ==
+```
+
+#### Update a Helm chart
+
+If we make changes to the `first-chart`, we can update our cluster with:
+
+```bash
+# First check the chart files for the change
+helm template first-chart .
+# Apply the change to the cluster
+helm upgrade first-chart .
+```
+
+Monitor the changes:
+
+```bash
+kubectl get secrets
+kubectl describe secrets first-secret
 ```
 
 ### Uninstall a helm chart
