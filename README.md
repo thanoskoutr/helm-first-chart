@@ -85,7 +85,7 @@ Inspect the values of the helm chart:
 helm show values bitnami/kube-state-metrics > values.yaml
 ```
 
-### Update a Helm chart
+### Update the Helm chart
 
 Upgrade the chart version:
 
@@ -134,7 +134,7 @@ kubectl get cm
 kubectl describe cm first-chart-configmap
 ```
 
-#### Update a Helm chart
+#### Update the Helm chart
 
 If we make changes to the `first-chart`, we can update our cluster with:
 
@@ -167,7 +167,7 @@ data:
   password: NHc1NzIkOXNuczEmIQ==
 ```
 
-#### Update a Helm chart
+#### Update the Helm chart
 
 If we make changes to the `first-chart`, we can update our cluster with:
 
@@ -210,6 +210,51 @@ To rollback to a specific revision (e.g. Revision 2), run:
 ```bash
 # Last argument is the revision number displayed, on the helm history command
 helm rollback first-chart 2
+```
+
+### Render a ConfigMap value dynamically
+
+Helm allows us to use the double curly braces syntax (`{{ }}`) to add variable values in our charts. Helm will pull the values from the `Chart.yaml` and `values.yaml` files.
+
+To add a version value in our ConfigMap we can have in `templates/configmap.yaml`:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: first-chart-configmap-{{.Chart.Version}}
+data:
+  port: "8080"
+  allowTesting: "true"
+```
+
+In the `Chart.yaml` file the `version` value is already present, and we can update the minor version:
+
+```yaml
+apiVersion: v2
+name: first-chart
+description: A Helm chart for Kubernetes
+
+type: application
+
+version: 0.1.1
+
+appVersion: "1.16.0"
+```
+
+#### Update the Helm chart
+
+If we make changes to the `first-chart`, we can update our cluster with:
+
+```bash
+# Apply the change to the cluster
+helm upgrade first-chart .
+```
+
+Monitor the changes:
+
+```bash
+kubectl get cm
 ```
 
 ### Uninstall a helm chart
